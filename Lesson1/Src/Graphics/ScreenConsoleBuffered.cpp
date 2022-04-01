@@ -49,7 +49,7 @@ void ScreenConsoleBuffered::ClrScr()
     }
 }
 
-void __fastcall ScreenConsoleBuffered::GotoXY(double x, double y)
+void ScreenConsoleBuffered::GotoXY(double x, double y)
 {
     mCursor.X = static_cast<short>(x);
     mCursor.Y = static_cast<short>(y);

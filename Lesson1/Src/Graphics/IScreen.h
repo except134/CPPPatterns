@@ -25,7 +25,7 @@ class IScreen
 {
 public:
     virtual void ClrScr() = 0;
-    virtual void __fastcall GotoXY(double x, double y) = 0;
+    virtual void GotoXY(double x, double y) = 0;
     virtual uint16_t GetMaxX() = 0;
     virtual uint16_t GetMaxY() = 0;
     virtual void SetColor(ConsoleColor color) = 0;

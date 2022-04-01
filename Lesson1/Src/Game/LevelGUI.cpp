@@ -56,7 +56,7 @@ void LevelGUI::Draw() const
 
 }
 
-void __fastcall LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew)
+void LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew)
 {
     passedTime = passedTimeNew;
     fps = fpsNew;

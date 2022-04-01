@@ -7,7 +7,7 @@ void ScreenConsolePlain::ClrScr()
     system("cls");
 }
 
-void __fastcall ScreenConsolePlain::GotoXY(double x, double y)
+void ScreenConsolePlain::GotoXY(double x, double y)
 {
     const COORD cc = { short(x), short(y) };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cc);

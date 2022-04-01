@@ -5,11 +5,11 @@ class LoggerProxy : public ILogger, public SingletonStatic<LoggerProxy>, public 
 public:
     void SetReal(ILogger* plogger);
 
-    void __fastcall OpenLogFile(const std::string& FN) override;
+    void OpenLogFile(const std::string& FN) override;
     void CloseLogFile() override;
-    void __fastcall WriteToLog(const std::string& str) override;
-    void __fastcall WriteToLog(const std::string& str, int n) override;
-    void __fastcall WriteToLog(const std::string& str, double d) override;
+    void WriteToLog(const std::string& str) override;
+    void WriteToLog(const std::string& str, int n) override;
+    void WriteToLog(const std::string& str, double d) override;
 
 private:
     const std::tm* GetLocalTime();

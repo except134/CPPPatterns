@@ -7,9 +7,9 @@ public:
     {
     }
 
-    void __fastcall SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew);
+    void SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew);
 
-    void __fastcall SetHeight(uint16_t heightN)
+    void SetHeight(uint16_t heightN)
     {
         height = heightN;
     };

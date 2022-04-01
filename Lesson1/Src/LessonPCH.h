@@ -107,5 +107,7 @@
 #include "Game/Plane.h"
 #include "Game/Tank.h"
 #include "Game/House.h"
+#include "Game/Command.h"
+#include "Game/ObjectCommand.h"
 #include "Game/SBomber.h"
 

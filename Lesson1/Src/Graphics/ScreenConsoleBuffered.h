@@ -7,7 +7,7 @@ public:
     ~ScreenConsoleBuffered();
 
     void ClrScr() override;
-    void __fastcall GotoXY(double x, double y) override;
+    void GotoXY(double x, double y) override;
     uint16_t GetMaxX() override;
     uint16_t GetMaxY() override;
     void SetColor(ConsoleColor color) override;

@@ -54,15 +54,6 @@ SBomber::SBomber()
     pHouse->SetWidth(13);
     pHouse->SetPos(80, groundY - 1);
     vecStaticObj.push_back(pHouse);
-
-    /*
-    Bomb* pBomb = new Bomb;
-    pBomb->SetDirection(0.3, 1);
-    pBomb->SetSpeed(2);
-    pBomb->SetPos(51, 5);
-    pBomb->SetSize(SMALL_CRATER_SIZE);
-    vecDynamicObj.push_back(pBomb);
-    */
 }
 
 SBomber::~SBomber()
@@ -117,7 +108,7 @@ void SBomber::CheckPlaneAndLevelGUI()
 
 void SBomber::CheckBombsAndGround()
 {
-    vector<Bomb*> vecBombs = FindAllBombs();
+    vector<BombDecorator*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
     for(size_t i = 0; i < vecBombs.size(); i++) {
@@ -131,7 +122,7 @@ void SBomber::CheckBombsAndGround()
 
 }
 
-void SBomber::CheckDestoyableObjects(Bomb* pBomb)
+void SBomber::CheckDestoyableObjects(BombDecorator* pBomb)
 {
     vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
     const double size = pBomb->GetWidth();
@@ -139,7 +130,7 @@ void SBomber::CheckDestoyableObjects(Bomb* pBomb)
     for(size_t i = 0; i < vecDestoyableObjects.size(); i++) {
         const double x1 = pBomb->GetX() - size_2;
         const double x2 = x1 + size;
-        if(vecDestoyableObjects[i]->isInside(x1, x2)) {
+        if(vecDestoyableObjects[i]->IsInside(x1, x2)) {
             score += vecDestoyableObjects[i]->GetScore();
             DeleteStaticObj(vecDestoyableObjects[i]);
         }
@@ -148,24 +139,14 @@ void SBomber::CheckDestoyableObjects(Bomb* pBomb)
 
 void SBomber::DeleteDynamicObj(DynamicObject* pObj)
 {
-    auto it = vecDynamicObj.begin();
-    for(; it != vecDynamicObj.end(); ++it) {
-        if(*it == pObj) {
-            vecDynamicObj.erase(it);
-            break;
-        }
-    }
+    std::unique_ptr<GameCommand> command = std::make_unique<DeleteObjectCommand<DynamicObject>>(vecDynamicObj, pObj);
+    command->Run();
 }
 
 void SBomber::DeleteStaticObj(GameObject* pObj)
 {
-    auto it = vecStaticObj.begin();
-    for(; it != vecStaticObj.end(); ++it) {
-        if(*it == pObj) {
-            vecStaticObj.erase(it);
-            break;
-        }
-    }
+    std::unique_ptr<GameCommand> command = std::make_unique<DeleteObjectCommand<GameObject>>(vecStaticObj, pObj);
+    command->Run();
 }
 
 vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
@@ -204,12 +185,12 @@ Ground* SBomber::FindGround() const
     return nullptr;
 }
 
-vector<Bomb*> SBomber::FindAllBombs() const
+vector<BombDecorator*> SBomber::FindAllBombs() const
 {
-    vector<Bomb*> vecBombs;
+    vector<BombDecorator*> vecBombs;
 
     for(size_t i = 0; i < vecDynamicObj.size(); ++i) {
-        Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[i]);
+        BombDecorator* pBomb = dynamic_cast<BombDecorator*>(vecDynamicObj[i]);
         if(pBomb != nullptr) {
             vecBombs.push_back(pBomb);
         }
@@ -337,23 +318,8 @@ void SBomber::DropBomb()
     if(bombsNumber > 0) {
         LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-        double x = 0;
-        double y = 0;
-        Plane* pPlane = FindPlane();
-        if(pPlane) {
-            x = pPlane->GetX() + 4;
-            y = pPlane->GetY() + 2;
-        }
-
-        Bomb* pBomb = new Bomb;
-        pBomb->SetDirection(0.3, 1);
-        pBomb->SetSpeed(2);
-        pBomb->SetPos(x, y);
-        pBomb->SetWidth(SMALL_CRATER_SIZE);
-
-        vecDynamicObj.push_back(pBomb);
-        bombsNumber--;
-        score -= Bomb::BombCost;
+        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand>(vecDynamicObj, FindPlane(), bombsNumber, score);
+        command->Run();
     }
 }
 
