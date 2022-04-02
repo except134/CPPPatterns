@@ -26,8 +26,10 @@ public:
 
 private:
     void CheckPlaneAndLevelGUI();
+    template<class T>
     void CheckBombsAndGround();
-    void CheckDestoyableObjects(BombDecorator* pBomb);
+    template<class T>
+    void CheckDestoyableObjects(T* pBomb);
 
     void DeleteDynamicObj(DynamicObject* pBomb);
     void DeleteStaticObj(GameObject* pObj);
@@ -36,9 +38,11 @@ private:
     Plane* FindPlane() const;
     LevelGUI* FindLevelGUI() const;
     std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
-    std::vector<BombDecorator*> FindAllBombs() const;
+    template<class T>
+    std::vector<T*> FindAllBombs() const;
 
-    void DropBomb();
+    void DropBigBomb();
+    void DropSmallBomb();
 
     std::vector<DynamicObject*> vecDynamicObj;
     std::vector<GameObject*> vecStaticObj;

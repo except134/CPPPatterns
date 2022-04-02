@@ -21,6 +21,7 @@ private:
     T* object{};
 };
 
+template<class T>
 class DropBombCommand : public GameCommand
 {
 public:
@@ -36,7 +37,7 @@ public:
         double x = plane->GetX() + 4;
         double y = plane->GetY() + 2;
 
-        DynamicObject* bomb = new BombDecorator;
+        DynamicObject* bomb = new T;
         if(!bomb) {
             return;
         }

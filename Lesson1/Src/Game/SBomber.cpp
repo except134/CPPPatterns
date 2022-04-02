@@ -83,7 +83,8 @@ void SBomber::CheckObjects()
     LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
     CheckPlaneAndLevelGUI();
-    CheckBombsAndGround();
+    CheckBombsAndGround<Bomb>();
+    CheckBombsAndGround<BombDecorator>();
 };
 
 void SBomber::CheckPlaneAndLevelGUI()
@@ -106,9 +107,10 @@ void SBomber::CheckPlaneAndLevelGUI()
 
 }
 
+template<class T>
 void SBomber::CheckBombsAndGround()
 {
-    vector<BombDecorator*> vecBombs = FindAllBombs();
+    vector<T*> vecBombs = FindAllBombs<T>();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
     for(size_t i = 0; i < vecBombs.size(); i++) {
@@ -122,7 +124,8 @@ void SBomber::CheckBombsAndGround()
 
 }
 
-void SBomber::CheckDestoyableObjects(BombDecorator* pBomb)
+template<class T>
+void SBomber::CheckDestoyableObjects(T* pBomb)
 {
     vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
     const double size = pBomb->GetWidth();
@@ -185,12 +188,13 @@ Ground* SBomber::FindGround() const
     return nullptr;
 }
 
-vector<BombDecorator*> SBomber::FindAllBombs() const
+template<class T>
+vector<T*> SBomber::FindAllBombs() const
 {
-    vector<BombDecorator*> vecBombs;
+    vector<T*> vecBombs;
 
     for(size_t i = 0; i < vecDynamicObj.size(); ++i) {
-        BombDecorator* pBomb = dynamic_cast<BombDecorator*>(vecDynamicObj[i]);
+        T* pBomb = dynamic_cast<T*>(vecDynamicObj[i]);
         if(pBomb != nullptr) {
             vecBombs.push_back(pBomb);
         }
@@ -264,7 +268,12 @@ void SBomber::ProcessKBHit()
 
         case 'b':
         case 'B':
-            DropBomb();
+            DropBigBomb();
+        break;
+
+        case 'v':
+        case 'V':
+            DropSmallBomb();
         break;
 
         default:
@@ -313,13 +322,22 @@ void SBomber::TimeFinish()
     LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)deltaTime);
 }
 
-void SBomber::DropBomb()
+void SBomber::DropBigBomb()
 {
     if(bombsNumber > 0) {
         LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand>(vecDynamicObj, FindPlane(), bombsNumber, score);
+        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand<BombDecorator>>(vecDynamicObj, FindPlane(), bombsNumber, score);
         command->Run();
     }
 }
 
+void SBomber::DropSmallBomb()
+{
+    if(bombsNumber > 0) {
+        LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
+
+        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand<Bomb>>(vecDynamicObj, FindPlane(), bombsNumber, score);
+        command->Run();
+    }
+}
