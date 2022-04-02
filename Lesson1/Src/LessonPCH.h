@@ -102,6 +102,7 @@
 #include "Game/DynamicObject.h"
 #include "Game/DestroyableGroundObject.h"
 #include "Game/LevelGUI.h"
+#include "Game/Iterator.h"
 #include "Game/Bomb.h"
 #include "Game/Ground.h"
 #include "Game/Plane.h"

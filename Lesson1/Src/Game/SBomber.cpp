@@ -190,11 +190,10 @@ vector<T*> SBomber::FindAllBombs() const
 {
     vector<T*> vecBombs;
 
-    for(size_t i = 0; i < vecDynamicObj.size(); ++i) {
-        T* pBomb = dynamic_cast<T*>(vecDynamicObj[i].get());
-        if(pBomb != nullptr) {
-            vecBombs.emplace_back(pBomb);
-        }
+    Iterator<T> bombs(vecDynamicObj);
+
+    for(auto bomb : bombs) {
+        vecBombs.emplace_back(bomb);
     }
 
     return vecBombs;

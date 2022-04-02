@@ -23,6 +23,7 @@ public:
     void DrawFrame();
     void MoveObjects();
     void CheckObjects();
+
 private:
     void CheckPlaneAndLevelGUI();
     template<class T>
