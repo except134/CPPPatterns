@@ -44,6 +44,8 @@ private:
     void DropBigBomb();
     void DropSmallBomb();
 
+    void CommandRunner(std::unique_ptr<GameCommand> command);
+
     std::vector<std::shared_ptr<DynamicObject>> vecDynamicObj;
     std::vector<std::shared_ptr<GameObject>> vecStaticObj;
 

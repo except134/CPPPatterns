@@ -131,14 +131,12 @@ void SBomber::CheckDestoyableObjects(T* pBomb)
 
 void SBomber::DeleteDynamicObj(DynamicObject* pObj)
 {
-    std::unique_ptr<GameCommand> command = std::make_unique<DeleteObjectCommand<DynamicObject>>(vecDynamicObj, pObj);
-    command->Run();
+    CommandRunner(std::make_unique<DeleteObjectCommand<DynamicObject>>(vecDynamicObj, pObj));
 }
 
 void SBomber::DeleteStaticObj(GameObject* pObj)
 {
-    std::unique_ptr<GameCommand> command = std::make_unique<DeleteObjectCommand<GameObject>>(vecStaticObj, pObj);
-    command->Run();
+    CommandRunner(std::make_unique<DeleteObjectCommand<GameObject>>(vecStaticObj, pObj));
 }
 
 vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
@@ -316,8 +314,7 @@ void SBomber::DropBigBomb()
     if(bombsNumber > 0) {
         LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand<BombDecorator>>(vecDynamicObj, FindPlane(), bombsNumber, score, 3);
-        command->Run();
+        CommandRunner(std::make_unique<DropBombCommand<BombDecorator>>(vecDynamicObj, FindPlane(), bombsNumber, score, 3));
     }
 }
 
@@ -326,7 +323,14 @@ void SBomber::DropSmallBomb()
     if(bombsNumber > 0) {
         LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand<Bomb>>(vecDynamicObj, FindPlane(), bombsNumber, score);
+        CommandRunner(std::make_unique<DropBombCommand<Bomb>>(vecDynamicObj, FindPlane(), bombsNumber, score));
+    }
+}
+
+void SBomber::CommandRunner(std::unique_ptr<GameCommand> command)
+{
+    if(command) {
         command->Run();
     }
 }
+
