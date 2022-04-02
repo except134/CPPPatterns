@@ -9,17 +9,15 @@ void LevelGUI::Draw() const
     gScreen->SetColor(CC_White);
 
     gScreen->GotoXY(x, y);
-    char* buf = new (nothrow) char[width + 1];
+    std::unique_ptr<char[]> buf = std::make_unique<char[]>(width + 1);
     if(buf == nullptr) {
         return;
     }
-    memset(buf, '+', width);
+    std::memset(buf.get(), '+', width);
     buf[width] = '\0';
-    gScreen->Draw(buf);
+    gScreen->Draw(buf.get());
     gScreen->GotoXY(x, y + height);
-    gScreen->Draw(buf);
-    delete[] buf;
-    buf = nullptr;
+    gScreen->Draw(buf.get());
 
     for(size_t i = size_t(y); i < height + y; i++) {
         gScreen->GotoXY(x, (double)i);

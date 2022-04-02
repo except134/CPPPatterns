@@ -4,7 +4,7 @@ class SBomber
 {
 public:
     SBomber();
-    ~SBomber();
+    ~SBomber() = default;
 
     inline bool GetExitFlag() const
     {
@@ -44,8 +44,8 @@ private:
     void DropBigBomb();
     void DropSmallBomb();
 
-    std::vector<DynamicObject*> vecDynamicObj;
-    std::vector<GameObject*> vecStaticObj;
+    std::vector<std::shared_ptr<DynamicObject>> vecDynamicObj;
+    std::vector<std::shared_ptr<GameObject>> vecStaticObj;
 
     bool exitFlag;
 

@@ -22,13 +22,13 @@ ScreenConsoleBuffered::ScreenConsoleBuffered()
         SetConsoleScreenBufferSize(mOutputHandle, bufferSize);
     }
 
-    consoleBuffer = new (std::nothrow) CHAR_INFO[mWidth * mHeight];
+    consoleBuffer = std::make_unique<CHAR_INFO[]>(mWidth * mHeight);
     if(!consoleBuffer) {
         std::cerr << "Error! No memory!" << std::endl;
         _exit(1);
     }
 
-    ZeroArray(consoleBuffer, mWidth * mHeight);
+    ZeroArray(consoleBuffer.get(), mWidth * mHeight);
 
     CONSOLE_CURSOR_INFO cci{ .bVisible = false };
     SetConsoleCursorInfo(mOutputHandle, &cci);
@@ -36,7 +36,6 @@ ScreenConsoleBuffered::ScreenConsoleBuffered()
 
 ScreenConsoleBuffered::~ScreenConsoleBuffered()
 {
-    delete consoleBuffer;
     CONSOLE_CURSOR_INFO cci{ .bVisible = true };
     SetConsoleCursorInfo(mOutputHandle, &cci);
 }
@@ -82,6 +81,6 @@ void ScreenConsoleBuffered::Draw(const std::string& str)
 void ScreenConsoleBuffered::Flush()
 {
     SMALL_RECT consoleWriteArea = { 0, 0, mWidth - 1, mHeight - 1 };
-    WriteConsoleOutputA(mOutputHandle, consoleBuffer, {mWidth, mHeight}, { 0, 0 }, &consoleWriteArea);
+    WriteConsoleOutputA(mOutputHandle, consoleBuffer.get(), {mWidth, mHeight}, { 0, 0 }, &consoleWriteArea);
 }
 

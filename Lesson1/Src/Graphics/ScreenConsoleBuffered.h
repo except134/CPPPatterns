@@ -17,7 +17,7 @@ public:
 protected:
     short mWidth{};
     short mHeight{};
-    CHAR_INFO* consoleBuffer{};
+    std::unique_ptr<CHAR_INFO[]> consoleBuffer;
     COORD mCursor{};
     ConsoleColor mCurColor{};
     HANDLE mOutputHandle{};

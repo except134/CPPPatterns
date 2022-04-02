@@ -3,7 +3,7 @@
 template<class T>
 class DeleteObjectCommand : public GameCommand
 {
-    using ObjectsVector = std::vector<T*>;
+    using ObjectsVector = std::vector<std::shared_ptr<T>>;
 
 public:
     DeleteObjectCommand(ObjectsVector& objs, T* obj) :
@@ -13,7 +13,7 @@ public:
 
     void Run() override
     {
-        std::erase_if(objects, [&](const auto& i) {return i == object; });
+        std::erase_if(objects, [&](const auto& i) {return i.get() == object; });
     }
 
 private:
@@ -24,13 +24,16 @@ private:
 template<class T>
 class DropBombCommand : public GameCommand
 {
+    using ObjectsVector = std::vector<std::shared_ptr<DynamicObject>>;
+
 public:
-    DropBombCommand(std::vector<DynamicObject*>& objs, const Plane* pln, uint16_t& bNumber, int16_t& scr, double sp = 3.0) :
+    DropBombCommand(ObjectsVector& objs, const Plane* pln, uint16_t& bNumber, int16_t& scr, double sp = 2.0, CraterSize craterSz = SMALL_CRATER_SIZE) :
         dynamicObjects{ objs },
         plane{ pln },
         bombsNumber{ bNumber },
         score{ scr },
-        speed{ sp }
+        speed{ sp },
+        craterSize{ craterSz }
     {}
 
     void Run() override
@@ -38,7 +41,7 @@ public:
         double x = plane->GetX() + 4;
         double y = plane->GetY() + 2;
 
-        DynamicObject* bomb = new T;
+        std::shared_ptr<DynamicObject> bomb = std::make_shared<T>();
         if(!bomb) {
             return;
         }
@@ -46,7 +49,7 @@ public:
         bomb->SetDirection(0.3, 1);
         bomb->SetSpeed(speed);
         bomb->SetPos(x, y);
-        bomb->SetWidth(SMALL_CRATER_SIZE);
+        bomb->SetWidth(craterSize);
 
         dynamicObjects.emplace_back(bomb);
         bombsNumber--;
@@ -54,10 +57,11 @@ public:
     }
 
 private:
-    std::vector<DynamicObject*>& dynamicObjects;
+    ObjectsVector& dynamicObjects;
     const Plane* plane;
     uint16_t& bombsNumber;
     int16_t& score;
-    double speed;
+    double speed{};
+    CraterSize craterSize{};
 };
 

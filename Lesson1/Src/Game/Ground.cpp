@@ -35,16 +35,16 @@ void Ground::Draw() const
     gScreen->SetColor(CC_Green);
 
     const size_t bufSize = width + 1;
-    char* buf = new (nothrow) char[bufSize];
+    std::unique_ptr<char[]> buf = std::make_unique<char[]>(bufSize);
     if(buf == nullptr) {
         return;
     }
 
     if(vecCrates.size() == 0) {
         gScreen->GotoXY(x, y);
-        memset(buf, '=', bufSize);
+        std::memset(buf.get(), '=', bufSize);
         buf[bufSize - 1] = '\0';
-        gScreen->Draw(buf);
+        gScreen->Draw(buf.get());
     } else {
         const size_t X = size_t(x);
         char c;
@@ -55,14 +55,12 @@ void Ground::Draw() const
 
         gScreen->GotoXY((double)X, y);
         buf[bufSize - 1] = '\0';
-        gScreen->Draw(buf);
+        gScreen->Draw(buf.get());
 
         for(size_t i = 0; i < vecCrates.size(); i++) {
             vecCrates[i].Draw();
         }
     }
-
-    delete[] buf;
 }
 
 bool Ground::IsInsideAnyCrater(double valX) const
