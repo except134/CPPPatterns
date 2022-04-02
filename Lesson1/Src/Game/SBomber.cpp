@@ -22,17 +22,27 @@ SBomber::SBomber()
     p->SetPos(DefaultPosX, DefaultPosY);
     vecDynamicObj.emplace_back(p);
 
-    std::shared_ptr<LevelGUI> pGUI = std::make_shared<LevelGUI>();
-    pGUI->SetParam(passedTime, fps, bombsNumber, score);
+
     const uint16_t maxX = gScreen->GetMaxX();
     const uint16_t maxY = gScreen->GetMaxY();
     const uint16_t offset = 3;
     const uint16_t width = maxX - 7;
-    pGUI->SetPos(offset, offset);
-    pGUI->SetWidth(width);
-    pGUI->SetHeight(maxY - 4);
-    pGUI->SetFinishX(offset + width - 4);
-    vecStaticObj.emplace_back(pGUI);
+
+    levelGUI1 = std::make_shared<LevelGUI1>();
+    levelGUI1->SetParam(passedTime, fps, bombsNumber, score);
+    levelGUI1->SetPos(offset, offset);
+    levelGUI1->SetWidth(width);
+    levelGUI1->SetHeight(maxY - 4);
+    levelGUI1->SetFinishX(offset + width - 4);
+
+    levelGUI2 = std::make_shared<LevelGUI2>();
+    levelGUI2->SetParam(passedTime, fps, bombsNumber, score);
+    levelGUI2->SetPos(offset, offset);
+    levelGUI2->SetWidth(width);
+    levelGUI2->SetHeight(maxY - 4);
+    levelGUI2->SetFinishX(offset + width - 4);
+
+    SetGUIStrategy(levelGUI1);
 
     std::shared_ptr<Ground> pGr = std::make_shared<Ground>();
     const uint16_t groundY = maxY - 5;
@@ -202,10 +212,10 @@ Plane* SBomber::FindPlane() const
     return nullptr;
 }
 
-LevelGUI* SBomber::FindLevelGUI() const
+AbstractLevelGUI* SBomber::FindLevelGUI() const
 {
     for(size_t i = 0; i < vecStaticObj.size(); ++i) {
-        LevelGUI* p = dynamic_cast<LevelGUI*>(vecStaticObj[i].get());
+        AbstractLevelGUI* p = dynamic_cast<AbstractLevelGUI*>(vecStaticObj[i].get());
         if(p != nullptr) {
             return p;
         }
@@ -261,6 +271,14 @@ void SBomber::ProcessKBHit()
         case 'v':
         case 'V':
             DropSmallBomb();
+        break;
+
+        case '1':
+            SetGUIStrategy(levelGUI1);
+        break;
+
+        case '2':
+            SetGUIStrategy(levelGUI2);
         break;
 
         default:

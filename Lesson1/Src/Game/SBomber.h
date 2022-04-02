@@ -23,7 +23,6 @@ public:
     void DrawFrame();
     void MoveObjects();
     void CheckObjects();
-
 private:
     void CheckPlaneAndLevelGUI();
     template<class T>
@@ -36,7 +35,20 @@ private:
 
     Ground* FindGround() const;
     Plane* FindPlane() const;
-    LevelGUI* FindLevelGUI() const;
+
+    std::shared_ptr<AbstractLevelGUI> levelGUI;
+    std::shared_ptr<LevelGUI1> levelGUI1;
+    std::shared_ptr<LevelGUI2> levelGUI2;
+
+    void SetGUIStrategy(std::shared_ptr<AbstractLevelGUI> g)
+    {
+        std::erase_if(vecStaticObj, [&](const auto& i) { return i.get() == levelGUI.get(); });
+        levelGUI = g;
+        vecStaticObj.emplace_back(levelGUI);
+    }
+
+    AbstractLevelGUI* FindLevelGUI() const;
+
     std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
     template<class T>
     std::vector<T*> FindAllBombs() const;
