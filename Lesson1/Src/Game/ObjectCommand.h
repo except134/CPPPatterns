@@ -53,7 +53,7 @@ public:
 
         dynamicObjects.emplace_back(bomb);
         bombsNumber--;
-        score -= Bomb::BombCost;
+        score -= T::BombCost;
     }
 
 private:

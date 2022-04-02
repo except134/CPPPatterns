@@ -50,19 +50,28 @@ SBomber::SBomber()
     pGr->SetWidth(width - 2);
     vecStaticObj.emplace_back(pGr);
 
+    uint16_t tankWidth = 13;
+    uint16_t tankSpace = 10;
+    uint16_t tankStartX = ((width-2) - (tankWidth + tankSpace) * 3) / 2;
+
+    std::shared_ptr<TankAdapter> pTankAdaptee = std::make_shared<TankAdapter>();
+    pTankAdaptee->SetWidth(tankWidth);
+    pTankAdaptee->SetPos(tankStartX, groundY - 1);
+    vecStaticObj.emplace_back(pTankAdaptee);
+
     std::shared_ptr<Tank> pTank1 = std::make_shared<Tank>();
-    pTank1->SetWidth(13);
-    pTank1->SetPos(30, groundY - 1);
+    pTank1->SetWidth(tankWidth);
+    pTank1->SetPos(pTankAdaptee->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pTank1);
 
     std::shared_ptr<Tank> pTank2 = std::make_shared<Tank>();
-    pTank2->SetWidth(13);
-    pTank2->SetPos(50, groundY - 1);
+    pTank2->SetWidth(tankWidth);
+    pTank2->SetPos(pTank1->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pTank2);
 
     std::shared_ptr<House> pHouse = std::make_shared<House>();
-    pHouse->SetWidth(13);
-    pHouse->SetPos(80, groundY - 1);
+    pHouse->SetWidth(tankWidth);
+    pHouse->SetPos(pTank2->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pHouse);
 }
 
@@ -153,11 +162,18 @@ vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
 {
     vector<DestroyableGroundObject*> vec;
     Tank* pTank;
+    TankAdapter* pTankAdapter;
     House* pHouse;
     for(size_t i = 0; i < vecStaticObj.size(); ++i) {
         pTank = dynamic_cast<Tank*>(vecStaticObj[i].get());
         if(pTank != nullptr) {
             vec.emplace_back(pTank);
+            continue;
+        }
+
+        pTankAdapter = dynamic_cast<TankAdapter*>(vecStaticObj[i].get());
+        if(pTankAdapter != nullptr) {
+            vec.emplace_back(pTankAdapter);
             continue;
         }
 

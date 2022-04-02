@@ -107,6 +107,8 @@
 #include "Game/Ground.h"
 #include "Game/Plane.h"
 #include "Game/Tank.h"
+#include "Game/TankAdaptee.h"
+#include "Game/TankAdapter.h"
 #include "Game/House.h"
 #include "Game/Command.h"
 #include "Game/ObjectCommand.h"
