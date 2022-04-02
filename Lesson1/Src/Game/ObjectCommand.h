@@ -25,11 +25,12 @@ template<class T>
 class DropBombCommand : public GameCommand
 {
 public:
-    DropBombCommand(std::vector<DynamicObject*>& objs, const Plane* pln, uint16_t& bNumber, int16_t& scr) :
+    DropBombCommand(std::vector<DynamicObject*>& objs, const Plane* pln, uint16_t& bNumber, int16_t& scr, double sp = 3.0) :
         dynamicObjects{ objs },
         plane{ pln },
         bombsNumber{ bNumber },
-        score{ scr }
+        score{ scr },
+        speed{ sp }
     {}
 
     void Run() override
@@ -43,7 +44,7 @@ public:
         }
 
         bomb->SetDirection(0.3, 1);
-        bomb->SetSpeed(3);
+        bomb->SetSpeed(speed);
         bomb->SetPos(x, y);
         bomb->SetWidth(SMALL_CRATER_SIZE);
 
@@ -57,5 +58,6 @@ private:
     const Plane* plane;
     uint16_t& bombsNumber;
     int16_t& score;
+    double speed;
 };
 

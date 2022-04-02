@@ -337,7 +337,7 @@ void SBomber::DropSmallBomb()
     if(bombsNumber > 0) {
         LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand<Bomb>>(vecDynamicObj, FindPlane(), bombsNumber, score);
+        std::unique_ptr<GameCommand> command = std::make_unique<DropBombCommand<Bomb>>(vecDynamicObj, FindPlane(), bombsNumber, score, 2);
         command->Run();
     }
 }
