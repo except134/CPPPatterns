@@ -17,7 +17,7 @@ void Crater::Draw() const
     }
 }
 
-bool Crater::isInside(double xn) const
+bool Crater::IsInside(double xn) const
 {
     const double size_2 = width / 2.0;
 
@@ -49,7 +49,7 @@ void Ground::Draw() const
         const size_t X = size_t(x);
         char c;
         for(size_t i = X; i < width + X; i++) {
-            c = (isInsideAnyCrater((double)i)) ? ' ' : '=';
+            c = (IsInsideAnyCrater((double)i)) ? ' ' : '=';
             buf[i - X] = c;
         }
 
@@ -65,11 +65,11 @@ void Ground::Draw() const
     delete[] buf;
 }
 
-bool Ground::isInsideAnyCrater(double valX) const
+bool Ground::IsInsideAnyCrater(double valX) const
 {
     bool isInside = false;
     for(size_t i = 0; i < vecCrates.size(); i++) {
-        if(vecCrates[i].isInside(valX)) {
+        if(vecCrates[i].IsInside(valX)) {
             isInside = true;
             break;
         }
