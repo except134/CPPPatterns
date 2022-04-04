@@ -4,7 +4,7 @@ class SBomber
 {
 public:
     SBomber();
-    ~SBomber();
+    ~SBomber() = default;
 
     inline bool GetExitFlag() const
     {
@@ -26,22 +26,41 @@ public:
 
 private:
     void CheckPlaneAndLevelGUI();
+    template<class T>
     void CheckBombsAndGround();
-    void __fastcall CheckDestoyableObjects(Bomb* pBomb);
+    template<class T>
+    void CheckDestoyableObjects(T* pBomb);
 
-    void __fastcall DeleteDynamicObj(DynamicObject* pBomb);
-    void __fastcall DeleteStaticObj(GameObject* pObj);
+    void DeleteDynamicObj(DynamicObject* pBomb);
+    void DeleteStaticObj(GameObject* pObj);
 
     Ground* FindGround() const;
     Plane* FindPlane() const;
-    LevelGUI* FindLevelGUI() const;
+
+    std::shared_ptr<AbstractLevelGUI> levelGUI;
+    std::shared_ptr<LevelGUI1> levelGUI1;
+    std::shared_ptr<LevelGUI2> levelGUI2;
+
+    void SetGUIStrategy(std::shared_ptr<AbstractLevelGUI> g)
+    {
+        std::erase_if(vecStaticObj, [&](const auto& i) { return i.get() == levelGUI.get(); });
+        levelGUI = g;
+        vecStaticObj.emplace_back(levelGUI);
+    }
+
+    AbstractLevelGUI* FindLevelGUI() const;
+
     std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
-    std::vector<Bomb*> FindAllBombs() const;
+    template<class T>
+    std::vector<T*> FindAllBombs() const;
 
-    void DropBomb();
+    void DropBigBomb();
+    void DropSmallBomb();
 
-    std::vector<DynamicObject*> vecDynamicObj;
-    std::vector<GameObject*> vecStaticObj;
+    void CommandRunner(std::unique_ptr<GameCommand> command);
+
+    std::vector<std::shared_ptr<DynamicObject>> vecDynamicObj;
+    std::vector<std::shared_ptr<GameObject>> vecStaticObj;
 
     bool exitFlag;
 

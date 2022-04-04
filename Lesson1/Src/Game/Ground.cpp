@@ -17,7 +17,7 @@ void Crater::Draw() const
     }
 }
 
-bool Crater::isInside(double xn) const
+bool Crater::IsInside(double xn) const
 {
     const double size_2 = width / 2.0;
 
@@ -35,41 +35,39 @@ void Ground::Draw() const
     gScreen->SetColor(CC_Green);
 
     const size_t bufSize = width + 1;
-    char* buf = new (nothrow) char[bufSize];
+    std::unique_ptr<char[]> buf = std::make_unique<char[]>(bufSize);
     if(buf == nullptr) {
         return;
     }
 
     if(vecCrates.size() == 0) {
         gScreen->GotoXY(x, y);
-        memset(buf, '=', bufSize);
+        std::memset(buf.get(), '=', bufSize);
         buf[bufSize - 1] = '\0';
-        gScreen->Draw(buf);
+        gScreen->Draw(buf.get());
     } else {
         const size_t X = size_t(x);
         char c;
         for(size_t i = X; i < width + X; i++) {
-            c = (isInsideAnyCrater((double)i)) ? ' ' : '=';
+            c = (IsInsideAnyCrater((double)i)) ? ' ' : '=';
             buf[i - X] = c;
         }
 
         gScreen->GotoXY((double)X, y);
         buf[bufSize - 1] = '\0';
-        gScreen->Draw(buf);
+        gScreen->Draw(buf.get());
 
         for(size_t i = 0; i < vecCrates.size(); i++) {
             vecCrates[i].Draw();
         }
     }
-
-    delete[] buf;
 }
 
-bool Ground::isInsideAnyCrater(double valX) const
+bool Ground::IsInsideAnyCrater(double valX) const
 {
     bool isInside = false;
     for(size_t i = 0; i < vecCrates.size(); i++) {
-        if(vecCrates[i].isInside(valX)) {
+        if(vecCrates[i].IsInside(valX)) {
             isInside = true;
             break;
         }

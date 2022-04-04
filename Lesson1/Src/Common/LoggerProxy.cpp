@@ -7,7 +7,7 @@ void LoggerProxy::SetReal(ILogger* plogger)
     logger = plogger;
 }
 
-void __fastcall LoggerProxy::OpenLogFile(const std::string& FN)
+void LoggerProxy::OpenLogFile(const std::string& FN)
 {
     if(logger)
         logger->OpenLogFile(FN);
@@ -37,7 +37,7 @@ std::ostream& operator<< (std::ostream& stream, const std::tm* tm)
         << std::setfill('0') << std::setw(2) << tm->tm_sec;
 }
 
-void __fastcall LoggerProxy::WriteToLog(const std::string& str)
+void LoggerProxy::WriteToLog(const std::string& str)
 {
     if(!logger)
         return;
@@ -46,7 +46,7 @@ void __fastcall LoggerProxy::WriteToLog(const std::string& str)
     logger->WriteToLog(s.str());
 }
 
-void __fastcall LoggerProxy::WriteToLog(const std::string& str, int n)
+void LoggerProxy::WriteToLog(const std::string& str, int n)
 {
     if(!logger)
         return;
@@ -55,7 +55,7 @@ void __fastcall LoggerProxy::WriteToLog(const std::string& str, int n)
     logger->WriteToLog(s.str(), n);
 }
 
-void __fastcall LoggerProxy::WriteToLog(const std::string& str, double d)
+void LoggerProxy::WriteToLog(const std::string& str, double d)
 {
     if(!logger)
         return;

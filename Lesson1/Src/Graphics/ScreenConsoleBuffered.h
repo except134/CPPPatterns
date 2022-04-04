@@ -7,7 +7,7 @@ public:
     ~ScreenConsoleBuffered();
 
     void ClrScr() override;
-    void __fastcall GotoXY(double x, double y) override;
+    void GotoXY(double x, double y) override;
     uint16_t GetMaxX() override;
     uint16_t GetMaxY() override;
     void SetColor(ConsoleColor color) override;
@@ -17,7 +17,7 @@ public:
 protected:
     short mWidth{};
     short mHeight{};
-    CHAR_INFO* consoleBuffer{};
+    std::unique_ptr<CHAR_INFO[]> consoleBuffer;
     COORD mCursor{};
     ConsoleColor mCurColor{};
     HANDLE mOutputHandle{};

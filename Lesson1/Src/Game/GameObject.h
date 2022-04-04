@@ -10,25 +10,25 @@ public:
 
     virtual void Draw() const = 0;
 
-    inline void SetPos(double nx, double ny)
+    virtual void SetPos(double nx, double ny)
     {
         x = nx; y = ny;
     }
 
-    inline double GetY() const
+    virtual double GetY() const
     {
         return y;
     }
-    inline double GetX() const
+    virtual double GetX() const
     {
         return x;
     }
 
-    inline void SetWidth(uint16_t widthN)
+    virtual void SetWidth(uint16_t widthN)
     {
         width = widthN;
     }
-    inline uint16_t GetWidth() const
+    virtual uint16_t GetWidth() const
     {
         return width;
     }
