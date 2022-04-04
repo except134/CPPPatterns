@@ -1,18 +1,22 @@
-COMPUTER_NAME       = os.getenv("COMPUTERNAME") 
-LOCATION_DIR        = "Build/" ..  COMPUTER_NAME .. "/" .. _ACTION
-
 solution ("Lesson1")
+	if not os.ishost("windows") then
+		LOCATION_DIR        = "Build/" ..  os.outputof("uname -n") .. "/" .. _ACTION
+    		staticruntime "Off"
+    		system "linux"
+	else
+		LOCATION_DIR        = "Build/" ..  os.getenv("COMPUTERNAME") .. "/" .. _ACTION
+    		staticruntime "On"
+    		system "Windows"
+    		buildoptions { "/Zm512 /bigobj" }
+	end
+
     	location(LOCATION_DIR)
     	configurations { "Release", "Debug" }
-    	platforms { "x64" }
     	architecture "x64"
     	cppdialect("C++latest")
     	language "C++"
-    	system "Windows"
     	systemversion("latest")
     	startproject("Lesson1")
-        staticruntime "On"
-        buildoptions { "/Zm512 /bigobj" }
 
     	defines { 
 	}
@@ -40,10 +44,13 @@ solution ("Lesson1")
 project "Game"
     	targetdir "Bin"
     	debugdir "$(TargetDir)"
-    	targetname "$(ProjectName)$(PlatformArchitecture)$(Configuration)"
     	kind "ConsoleApp"
-    	pchheader("LessonPCH.h") 
-    	pchsource("Src/LessonPCH.cpp") 
+	if not os.ishost("windows") then
+   		pchheader("Src/LessonPCH.h") 
+	else
+   		pchheader("LessonPCH.h") 
+	end
+   	pchsource("Src/LessonPCH.cpp") 
     	
 	links {  
 	}
@@ -55,3 +62,12 @@ project "Game"
         	"Src/**.h", 
         	"Src/**.cpp", 
     	}
+
+	if not os.ishost("windows") then
+   		targetname "SBomberLX64"
+		excludes { 
+			"Src/Common/Input.*" 
+		}	
+	else
+   		targetname "$(ProjectName)$(PlatformArchitecture)$(Configuration)"
+	end

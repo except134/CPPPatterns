@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include "LessonPCH.h"
 
+#ifdef _WIN32
+
 ScreenConsoleBuffered::ScreenConsoleBuffered()
 {
     mOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -84,3 +86,4 @@ void ScreenConsoleBuffered::Flush()
     WriteConsoleOutputA(mOutputHandle, consoleBuffer.get(), {mWidth, mHeight}, { 0, 0 }, &consoleWriteArea);
 }
 
+#endif

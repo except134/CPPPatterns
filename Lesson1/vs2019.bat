@@ -1,3 +1,3 @@
-@Tools\premake5.exe --verbose vs2019
+@Tools\premake5.exe --os=windows --verbose vs2019
 
 

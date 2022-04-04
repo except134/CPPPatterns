@@ -79,6 +79,12 @@
 #include <Windows.h>
 #include <conio.h>
 
+#else
+
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <unistd.h>
+
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,6 +101,7 @@
 #include "Graphics/IScreen.h"
 #include "Graphics/ScreenConsolePlain.h"
 #include "Graphics/ScreenConsoleBuffered.h"
+#include "Graphics/ScreenConsoleLinux.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Game part

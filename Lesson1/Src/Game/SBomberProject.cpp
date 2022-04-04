@@ -11,7 +11,11 @@ int main(void)
     LoggerProxy::Instance().SetReal(&LoggerFile::Instance());
     LoggerProxy::Instance().OpenLogFile("log.txt");
 
+#ifdef _WIN32
     gScreen = &ScreenConsoleBuffered::Instance();
+#else
+    gScreen = &ScreenConsoleLinux::Instance();
+#endif
 
     SBomber game;
 

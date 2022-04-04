@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include "LessonPCH.h"
 
+#ifdef _WIN32
+
 void ScreenConsolePlain::ClrScr()
 {
     system("cls");
@@ -51,3 +53,5 @@ void ScreenConsolePlain::Draw(const std::string& str)
     std::cout << str;
 }
 
+
+#endif
