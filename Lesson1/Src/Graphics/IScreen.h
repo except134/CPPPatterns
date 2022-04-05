@@ -52,6 +52,8 @@ public:
     virtual uint16_t GetMaxY() = 0;
     virtual void SetColor(ConsoleColor color) = 0;
     virtual void Draw(const std::string& str) = 0;
+    virtual void Draw(uint16_t x, uint16_t y, const std::string& str) = 0;
+    virtual void Draw(uint16_t x, uint16_t y, char str) = 0;
     virtual void Flush() {};
 };
 

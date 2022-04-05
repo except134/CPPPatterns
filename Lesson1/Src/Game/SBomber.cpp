@@ -69,9 +69,36 @@ SBomber::SBomber()
     pTank2->SetPos(pTank1->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pTank2);
 
-    std::shared_ptr<House> pHouse = std::make_shared<House>();
-    pHouse->SetWidth(tankWidth);
-    pHouse->SetPos(pTank2->GetX() + tankWidth + tankSpace, groundY - 1);
+    HouseDirector houseDirector;
+    HouseBuilderA houseBuilderA;
+    HouseBuilderB houseBuilderB;
+    HouseBuilderC houseBuilderC;
+
+    std::shared_ptr<House> pHouse;
+
+    std::cout << "\tChoose house type:\n";
+    std::cout << "\t1: Floor, Walls, Roof, Pipe\n";
+    std::cout << "\t2: Floor, Walls, Windows, Roof\n";
+    std::cout << "\t3: All elements\n";
+
+    int houseType{ 0 };
+    while(houseType < 1 || houseType > 3)
+        std::cin >> houseType;
+
+    switch(houseType) {
+        case 1:
+            pHouse = houseDirector.CreateHouse(houseBuilderA);
+        break;
+        case 2:
+            pHouse = houseDirector.CreateHouse(houseBuilderB);
+        break;
+        case 3:
+            pHouse = houseDirector.CreateHouse(houseBuilderC);
+        break;
+        default:
+        break;
+    }
+    pHouse->SetPos(pTank2->GetX() + tankWidth + tankSpace, groundY);
     vecStaticObj.emplace_back(pHouse);
 }
 
