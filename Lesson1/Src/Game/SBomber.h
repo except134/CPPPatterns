@@ -1,5 +1,7 @@
 #pragma once
 
+class CollisionBridge;
+
 class SBomber
 {
 public:
@@ -25,12 +27,6 @@ public:
     void CheckObjects();
 
 private:
-    void CheckPlaneAndLevelGUI();
-    template<class T>
-    void CheckBombsAndGround();
-    template<class T>
-    void CheckDestoyableObjects(T* pBomb);
-
     void DeleteDynamicObj(DynamicObject* pBomb);
     void DeleteStaticObj(GameObject* pObj);
 
@@ -62,6 +58,8 @@ private:
     std::vector<std::shared_ptr<DynamicObject>> vecDynamicObj;
     std::vector<std::shared_ptr<GameObject>> vecStaticObj;
 
+    std::unique_ptr<CollisionBridge> collisionBridge;
+
     bool exitFlag;
 
     uint64_t startTime, finishTime, passedTime;
@@ -70,5 +68,7 @@ private:
     static const int DefaultSpeed = 4;
     static const int DefaultPosX = 5;
     static const int DefaultPosY = 10;
+
+    friend class CollisionBridge;
 };
 

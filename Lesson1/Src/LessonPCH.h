@@ -121,4 +121,5 @@
 #include "Game/Command.h"
 #include "Game/ObjectCommand.h"
 #include "Game/SBomber.h"
+#include "Game/CollisionBridge.h"
 

@@ -100,6 +100,8 @@ SBomber::SBomber()
     }
     pHouse->SetPos(pTank2->GetX() + tankWidth + tankSpace, groundY);
     vecStaticObj.emplace_back(pHouse);
+
+    collisionBridge = std::make_unique<CollisionBridge>(this);
 }
 
 void SBomber::MoveObjects()
@@ -117,63 +119,10 @@ void SBomber::CheckObjects()
 {
     LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-    CheckPlaneAndLevelGUI();
-    CheckBombsAndGround<Bomb>();
-    CheckBombsAndGround<BombDecorator>();
+    collisionBridge->CheckPlaneAndLevelGUI();
+    collisionBridge->CheckBombsAndGround<Bomb>();
+    collisionBridge->CheckBombsAndGround<BombDecorator>();
 };
-
-void SBomber::CheckPlaneAndLevelGUI()
-{
-    auto p = FindPlane();
-    if(p) {
-        if(p->GetX() > FindLevelGUI()->GetFinishX()) {
-            exitFlag = true;
-        }
-        if(p->GetY() < 5) {
-            p->SetDirection(1, 0);
-            p->SetPos(p->GetX(), 5);
-        }
-
-        if(p->GetY() > gScreen->GetMaxY() - 7) {
-            p->SetDirection(1, 0);
-            p->SetPos(p->GetX(), gScreen->GetMaxY() - 7);
-        }
-    }
-
-}
-
-template<class T>
-void SBomber::CheckBombsAndGround()
-{
-    vector<T*> vecBombs = FindAllBombs<T>();
-    Ground* pGround = FindGround();
-    const double y = pGround->GetY();
-    for(size_t i = 0; i < vecBombs.size(); i++) {
-        if(vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
-        {
-            pGround->AddCrater(vecBombs[i]->GetX());
-            CheckDestoyableObjects(vecBombs[i]);
-            DeleteDynamicObj(vecBombs[i]);
-        }
-    }
-
-}
-
-template<class T>
-void SBomber::CheckDestoyableObjects(T* pBomb)
-{
-    vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
-    const double size = pBomb->GetWidth();
-    const double size_2 = size / 2;
-    for(size_t i = 0; i < vecDestoyableObjects.size(); i++) {
-        const double x1 = pBomb->GetX() - size_2;
-        const double x2 = x1 + size;
-        if(vecDestoyableObjects[i]->IsInside(x1, x2)) {
-            score += vecDestoyableObjects[i]->GetScore();
-            DeleteStaticObj(vecDestoyableObjects[i]);
-        }
-    }
-}
 
 void SBomber::DeleteDynamicObj(DynamicObject* pObj)
 {
