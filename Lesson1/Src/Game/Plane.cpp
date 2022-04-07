@@ -4,6 +4,11 @@
 
 using namespace std;
 
+void Plane::Accept(const Visitor& v)
+{
+    v.Log(*this);
+}
+
 void Plane::Draw() const
 {
     gScreen->SetColor(CC_LightBlue);

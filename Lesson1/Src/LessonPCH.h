@@ -106,6 +106,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Game part
 #include "Game/GameObject.h"
+#include "Game/Visitor.h"
 #include "Game/DynamicObject.h"
 #include "Game/DestroyableGroundObject.h"
 #include "Game/LevelGUI.h"

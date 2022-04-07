@@ -4,6 +4,16 @@
 
 using namespace std;
 
+void Bomb::Accept(const Visitor& v)
+{
+    v.Log(*this);
+}
+
+void BombDecorator::Accept(const Visitor& v)
+{
+    v.Log(*this);
+}
+
 void Bomb::Draw() const
 {
     gScreen->SetColor(CC_LightMagenta);
@@ -59,8 +69,18 @@ void BombDecorator::SetSpeed(double sp)
     bomb.SetSpeed(sp);
 }
 
+double BombDecorator::GetSpeed() const
+{
+    return bomb.GetSpeed();
+}
+
 void BombDecorator::SetDirection(double dx, double dy)
 {
     bomb.SetDirection(dx, dy);
+}
+
+std::tuple<double, double> BombDecorator::GetDirection() const
+{
+    return bomb.GetDirection();
 }
 

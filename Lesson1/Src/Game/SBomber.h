@@ -59,6 +59,7 @@ private:
     std::vector<std::shared_ptr<GameObject>> vecStaticObj;
 
     std::unique_ptr<CollisionBridge> collisionBridge;
+    LogVisitor logVisitor;
 
     bool exitFlag;
 
