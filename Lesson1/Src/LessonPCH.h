@@ -117,7 +117,9 @@
 #include "Game/TankAdaptee.h"
 #include "Game/TankAdapter.h"
 #include "Game/House.h"
+#include "Game/HouseBuilder.h"
 #include "Game/Command.h"
 #include "Game/ObjectCommand.h"
 #include "Game/SBomber.h"
+#include "Game/CollisionBridge.h"
 

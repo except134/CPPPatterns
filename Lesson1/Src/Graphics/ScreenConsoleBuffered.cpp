@@ -80,6 +80,19 @@ void ScreenConsoleBuffered::Draw(const std::string& str)
     }
 }
 
+void ScreenConsoleBuffered::Draw(uint16_t x, uint16_t y, const std::string& str)
+{
+    GotoXY(x, y);
+    Draw(str);
+}
+
+void ScreenConsoleBuffered::Draw(uint16_t x, uint16_t y, char str)
+{
+    GotoXY(x, y);
+    std::string s(1, str);
+    Draw(s);
+}
+
 void ScreenConsoleBuffered::Flush()
 {
     SMALL_RECT consoleWriteArea = { 0, 0, mWidth - 1, mHeight - 1 };
