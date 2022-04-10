@@ -7,6 +7,9 @@ public:
 
     virtual inline uint16_t GetScore() const = 0;
 
-protected:
-
+    virtual bool HandleInsideCheck(double x1, double x2) override
+    {
+        return IsInside(x1, x2);
+    }
 };
+

@@ -1,6 +1,6 @@
 #pragma once
 
-class GameObject
+class GameObject : public Observer
 {
 public:
     GameObject() : x(0.0), y(0.0), width(0)
@@ -33,6 +33,10 @@ public:
         return width;
     }
 
+    bool HandleInsideCheck(double x1, double x2) override
+    {
+        return false;
+    }
 protected:
     double x, y;
     uint16_t width;
