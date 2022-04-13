@@ -3,18 +3,19 @@
 class Bomb : public DynamicObject
 {
 public:
-    static const uint16_t BombCost = 5; // стоимость бомбы в очках
+    static const uint16_t BombCost = 5; 
+
+    void Accept(const Visitor& v) override;
 
     void Draw() const override;
-
-private:
-
 };
 
 class BombDecorator : public DynamicObject
 {
 public:
-    static const uint16_t BombCost = 10; // стоимость бомбы в очках
+    static const uint16_t BombCost = 10;
+
+    void Accept(const Visitor& v) override;
 
     void Draw() const override;
     void Move(uint16_t time) override;
@@ -24,7 +25,9 @@ public:
     void SetWidth(uint16_t width) override;
     uint16_t GetWidth() const override;
     void SetSpeed(double sp) override;
+    double GetSpeed() const override;
     void SetDirection(double dx, double dy) override;
+    std::tuple<double, double> GetDirection() const override;
 
 private:
     Bomb bomb;

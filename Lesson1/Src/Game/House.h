@@ -1,7 +1,7 @@
 #pragma once
 
-constexpr size_t HouseWidth = 14;
-constexpr size_t HouseHeight = 7;
+constexpr uint16_t HouseWidth = 14;
+constexpr uint16_t HouseHeight = 7;
 
 class House : public DestroyableGroundObject
 {
@@ -15,8 +15,8 @@ public:
 
     void Draw() const override;
 
-    constexpr size_t GetHouseWidth() const { return HouseWidth; }
-    constexpr size_t GetHouseHeight() const { return HouseHeight; }
+    constexpr uint16_t GetHouseWidth() const { return HouseWidth; }
+    constexpr uint16_t GetHouseHeight() const { return HouseHeight; }
 
 private:
     friend class HouseBuilderA;

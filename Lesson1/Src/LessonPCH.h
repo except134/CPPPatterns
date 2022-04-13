@@ -105,9 +105,11 @@
 
 //////////////////////////////////////////////////////////////////////////
 // Game part
+#include "Game/Observer.h"
 #include "Game/GameObject.h"
-#include "Game/DynamicObject.h"
+#include "Game/Visitor.h"
 #include "Game/DestroyableGroundObject.h"
+#include "Game/DynamicObject.h"
 #include "Game/LevelGUI.h"
 #include "Game/Iterator.h"
 #include "Game/Bomb.h"

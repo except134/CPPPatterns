@@ -26,11 +26,11 @@ bool House::IsInside(double x1, double x2) const
 
 void House::Draw() const
 {
-    uint16_t yStart = GetY() - GetHouseHeight();
+    uint16_t yStart = static_cast<uint16_t>(GetY()) - GetHouseHeight();
 
     gScreen->SetColor(CC_Yellow);
     for(uint16_t y = 0; y < GetHouseHeight(); ++y)
         for(uint16_t x = 0; x < GetHouseWidth(); ++x)
-            gScreen->Draw(GetX() + x, yStart + y, look[y][x]);
+            gScreen->Draw(static_cast<uint16_t>(GetX()) + x, yStart + y, look[y][x]);
         
 }
