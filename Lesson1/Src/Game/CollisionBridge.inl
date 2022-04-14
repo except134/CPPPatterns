@@ -7,7 +7,7 @@ inline void CollisionBridge::CheckPlaneAndLevelGUI()
     auto p = bomber->FindPlane();
     if(p) {
         if(p->GetX() > bomber->FindLevelGUI()->GetFinishX()) {
-            bomber->exitFlag = true;
+            bomber->SetExitFlag(true);
         }
         if(p->GetY() < 5) {
             p->SetDirection(1, 0);
@@ -49,7 +49,7 @@ inline void CollisionBridge::CheckDestoyableObjects(T* pBomb)
         const double x1 = pBomb->GetX() - size_2;
         const double x2 = x1 + size;
         if(vecDestoyableObjects[i]->IsInside(x1, x2)) {
-            bomber->score += vecDestoyableObjects[i]->GetScore();
+            bomber->AddScore(vecDestoyableObjects[i]->GetScore());
             bomber->DeleteStaticObj(vecDestoyableObjects[i]);
         }
     }
