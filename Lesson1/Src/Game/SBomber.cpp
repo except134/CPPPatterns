@@ -16,12 +16,18 @@ SBomber::SBomber()
 {
     LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-    std::shared_ptr<Plane> p = std::make_shared<Plane>();
+    std::shared_ptr<Plane> p;
+
+    if(rand() % 20 < 10) {
+        p = std::make_shared<ColorPlane>();
+    } else {
+        p = std::make_shared<BigPlane>();
+    }
+
     p->SetDirection(1, 0.1);
     p->SetSpeed(DefaultSpeed);
     p->SetPos(DefaultPosX, DefaultPosY);
     vecDynamicObj.emplace_back(p);
-
 
     const uint16_t maxX = gScreen->GetMaxX();
     const uint16_t maxY = gScreen->GetMaxY();
@@ -54,17 +60,20 @@ SBomber::SBomber()
     uint16_t tankSpace = 10;
     uint16_t tankStartX = ((width-2) - (tankWidth + tankSpace) * 3) / 2;
 
+    mediator = std::make_shared<Mediator>();
+    mediator->Add(levelGUI);
+
     std::shared_ptr<TankAdapter> pTankAdaptee = std::make_shared<TankAdapter>();
     pTankAdaptee->SetWidth(tankWidth);
     pTankAdaptee->SetPos(tankStartX, groundY - 1);
     vecStaticObj.emplace_back(pTankAdaptee);
 
-    std::shared_ptr<Tank> pTank1 = std::make_shared<Tank>();
+    std::shared_ptr<Tank> pTank1 = std::make_shared<Tank>(mediator);
     pTank1->SetWidth(tankWidth);
     pTank1->SetPos(pTankAdaptee->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pTank1);
 
-    std::shared_ptr<Tank> pTank2 = std::make_shared<Tank>();
+    std::shared_ptr<Tank> pTank2 = std::make_shared<Tank>(mediator);
     pTank2->SetWidth(tankWidth);
     pTank2->SetPos(pTank1->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pTank2);
@@ -298,8 +307,10 @@ void SBomber::DrawFrame()
     fps++;
 
     auto p = FindLevelGUI();
-    if(p)
+    if(p) {
         p->SetParam(passedTime, fps, bombsNumber, score);
+        p->ChangeMessage();
+    }
 
     gScreen->Flush();
 }

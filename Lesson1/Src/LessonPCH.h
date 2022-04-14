@@ -29,6 +29,7 @@
 #include <new>
 #include <cwchar>
 #include <exception>
+#include <random>
 
 // STL containers
 #include <vector>
@@ -105,12 +106,14 @@
 
 //////////////////////////////////////////////////////////////////////////
 // Game part
+#include "Game/TankMessage.h"
 #include "Game/Observer.h"
 #include "Game/GameObject.h"
 #include "Game/Visitor.h"
 #include "Game/DestroyableGroundObject.h"
 #include "Game/DynamicObject.h"
 #include "Game/LevelGUI.h"
+#include "Game/Mediator.h"
 #include "Game/Iterator.h"
 #include "Game/Bomb.h"
 #include "Game/Ground.h"

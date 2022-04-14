@@ -19,6 +19,8 @@ int main(void)
 
     SBomber game;
 
+    srand(time(0));
+
     do {
         game.TimeStart();
 
