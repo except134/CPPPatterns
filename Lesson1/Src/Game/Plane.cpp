@@ -11,6 +11,11 @@ void Plane::Accept(const Visitor& v)
 
 void Plane::Draw() const
 {
+    DrawTail();
+    DrawWing();
+    DrawBody();
+
+/*
     gScreen->SetColor(CC_LightBlue);
     gScreen->GotoXY(x, y);
     gScreen->Draw("=========>");
@@ -20,4 +25,51 @@ void Plane::Draw() const
     gScreen->Draw("\\\\\\\\");
     gScreen->GotoXY(x + 3, y + 1);
     gScreen->Draw("////");
+*/
+}
+
+void ColorPlane::DrawTail() const
+{
+    gScreen->SetColor(CC_LightBlue);
+    gScreen->GotoXY(x - 2, y - 1);
+    gScreen->Draw("===");
+}
+
+void ColorPlane::DrawWing() const
+{
+    gScreen->SetColor(CC_LightGreen);
+    gScreen->GotoXY(x + 3, y - 1);
+    gScreen->Draw("\\\\\\\\");
+    gScreen->GotoXY(x + 3, y + 1);
+    gScreen->Draw("////");
+}
+
+void ColorPlane::DrawBody() const
+{
+    gScreen->SetColor(CC_LightMagenta);
+    gScreen->GotoXY(x, y);
+    gScreen->Draw("=========>");
+}
+
+void BigPlane::DrawTail() const
+{
+    gScreen->SetColor(CC_LightBlue);
+    gScreen->GotoXY(x - 2, y - 1);
+    gScreen->Draw("===");
+}
+
+void BigPlane::DrawWing() const
+{
+    gScreen->SetColor(CC_LightBlue);
+    gScreen->GotoXY(x + 3, y - 1);
+    gScreen->Draw("\\\\\\\\");
+    gScreen->GotoXY(x + 3, y + 1);
+    gScreen->Draw("////");
+}
+
+void BigPlane::DrawBody() const
+{
+    gScreen->SetColor(CC_LightBlue);
+    gScreen->GotoXY(x, y);
+    gScreen->Draw("=========>");
 }

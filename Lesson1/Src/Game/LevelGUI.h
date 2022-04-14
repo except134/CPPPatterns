@@ -26,6 +26,22 @@ public:
         finishX = finishXN;
     }
 
+    virtual void AddMessage(std::unique_ptr<TankMessage>&& msg)
+    {
+        messages.push(*msg.get());
+    }
+
+    virtual void ChangeMessage()
+    {
+        if((passedTime / 1000) > timer) {
+            if(messages.size() != 0) {
+                curMessage = messages.front();
+                messages.pop();
+            }
+            timer += timer;
+        }
+    }
+
 protected:
     uint16_t height{ 0 };
     uint16_t finishX{ 109 };
@@ -34,6 +50,10 @@ protected:
     uint64_t fps{ 0 };
     uint16_t bombsNumber{ 0 };
     int16_t score{ 0 };
+
+    std::queue<TankMessage> messages{};
+    TankMessage curMessage{};
+    uint16_t timer{ 3 };
 };
 
 class LevelGUI1 : public AbstractLevelGUI

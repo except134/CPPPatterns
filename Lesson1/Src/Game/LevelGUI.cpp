@@ -51,6 +51,10 @@ void LevelGUI1::Draw() const
         s << "Score: " << score;
         gScreen->Draw(s.str());
     }
+    {
+        gScreen->GotoXY(curMessage.x, curMessage.y - 6);
+        gScreen->Draw(curMessage.text);
+    }
 
 }
 
@@ -102,6 +106,10 @@ void LevelGUI2::Draw() const
         gScreen->GotoXY(62, 1);
         s << "Score: " << score;
         gScreen->Draw(s.str());
+    }
+    {
+        gScreen->GotoXY(curMessage.x, curMessage.y - 6);
+        gScreen->Draw(curMessage.text);
     }
 
 }

@@ -60,6 +60,7 @@ private:
 
     std::unique_ptr<CollisionBridge> collisionBridge;
     LogVisitor logVisitor;
+    std::shared_ptr<Mediator> mediator;
 
     bool exitFlag;
 

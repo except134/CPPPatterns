@@ -4,6 +4,26 @@
 
 using namespace std;
 
+std::vector<std::string> Tank::messages{
+    "!!!",
+    "***",
+    "Asshole",
+    "I kill you!!!"
+};
+
+void Tank::SendMessage() const
+{
+    if(!messages.empty()) {
+        std::random_device rd;
+        std::mt19937 rdnum(rd());
+        uint64_t index{ rdnum() % messages.size() };
+        auto iter = messages.begin() + index;
+        std::unique_ptr<TankMessage> msg = std::make_unique<TankMessage>(x, y, messages.at(index));
+        mediator.get()->SendMessage(std::move(msg));
+        messages.erase(iter);
+    }
+}
+
 bool Tank::IsInside(double x1, double x2) const
 {
     const double XBeg = x + 2;
@@ -35,4 +55,7 @@ void Tank::Draw() const
     gScreen->Draw("    #####");
     gScreen->GotoXY(x, y);
     gScreen->Draw(" ###########");
+
+    SendMessage();
 }
+
