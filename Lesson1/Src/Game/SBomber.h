@@ -20,6 +20,7 @@ public:
     void MoveObjects();
     void CheckObjects();
 
+    // Для паттерна Мост
     Ground* FindGround() const;
     AbstractLevelGUI* FindLevelGUI() const;
     Plane* FindPlane() const;
