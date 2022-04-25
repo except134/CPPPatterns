@@ -31,6 +31,7 @@ public:
 
     void DropBigBomb();
     void DropSmallBomb();
+    void AddClone();
 
     void CommandRunner(std::unique_ptr<GameCommand> command);
 
@@ -168,6 +169,48 @@ SBomber::SBomberImpl::SBomberImpl()
     pHouse->SetPos(pTank2->GetX() + tankWidth + tankSpace, groundY);
     vecStaticObj.emplace_back(pHouse);
 
+}
+
+void SBomber::SBomberImpl::AddClone()
+{
+    auto allObjects = std::move(FindDestoyableGroundObjects());
+
+    if(allObjects.empty()) {
+        std::shared_ptr<TankAdapter> pTankAdaptee = std::make_shared<TankAdapter>();
+        pTankAdaptee->SetWidth(13);
+        pTankAdaptee->SetPos(30, gScreen->GetMaxY() - 6);
+        vecStaticObj.emplace_back(pTankAdaptee);
+        return;
+    }
+
+    std::random_device rd;
+    std::mt19937 rdnum(rd());
+
+    auto cloned = allObjects.at(rdnum() % allObjects.size())->Clone();
+
+    const double size = cloned->GetWidth();
+    const double sizeByTwo = size / 2;
+    double posX{ sizeByTwo };
+
+    for ( ; posX < (gScreen->GetMaxX() - sizeByTwo); ++posX) {
+        bool isBusy = false;
+        for (size_t i = 0; i < allObjects.size(); i++) {
+            if (allObjects[i]->IsInside(posX, posX + size)) {
+                isBusy = true;
+                continue;
+            }
+        }
+
+        if (!isBusy)
+            break;
+    }
+
+    if (posX < (gScreen->GetMaxX() - size)) {
+        cloned->SetPos(posX, cloned->GetY());
+        vecStaticObj.emplace_back(cloned);
+    } else {
+        delete cloned;
+    }
 }
 
 SBomber::SBomber()
@@ -387,6 +430,11 @@ void SBomber::ProcessKBHit()
                 LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " Can't move down. Limit exceeded.");
             }
         }break;
+
+        case 'd':
+        case 'D':
+            pImpl->AddClone();
+        break;
 
         case 'b':
         case 'B':

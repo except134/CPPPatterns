@@ -11,5 +11,7 @@ public:
     {
         return IsInside(x1, x2);
     }
+
+    virtual DestroyableGroundObject* Clone() const = 0;
 };
 
