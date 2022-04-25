@@ -111,14 +111,19 @@ SBomber::SBomberImpl::SBomberImpl()
 
     uint16_t tankWidth = 13;
     uint16_t tankSpace = 10;
-    uint16_t tankStartX = ((width - 2) - (tankWidth + tankSpace) * 3) / 2;
+    uint16_t tankStartX = ((width - 2) - (tankWidth + tankSpace) * 4) / 2;
 
     mediator = std::make_shared<Mediator>();
     mediator->Add(levelGUI);
 
+    std::shared_ptr<Tree> pTree = std::make_shared<Tree>(std::make_unique<SmallState>());
+    pTree->SetWidth(tankWidth);
+    pTree->SetPos(tankStartX, groundY - 1);
+    vecDynamicObj.emplace_back(pTree);
+
     std::shared_ptr<TankAdapter> pTankAdaptee = std::make_shared<TankAdapter>();
     pTankAdaptee->SetWidth(tankWidth);
-    pTankAdaptee->SetPos(tankStartX, groundY - 1);
+    pTankAdaptee->SetPos(pTree->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pTankAdaptee);
 
     std::shared_ptr<Tank> pTank1 = std::make_shared<Tank>(mediator);
