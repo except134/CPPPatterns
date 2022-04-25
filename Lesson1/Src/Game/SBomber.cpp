@@ -9,7 +9,10 @@ class SBomber::SBomberImpl
 public:
     SBomberImpl();
     ~SBomberImpl() = default;
-        
+
+    void TimeStart();
+    void TimeFinish();
+
     void DeleteDynamicObj(DynamicObject* pBomb);
     void DeleteStaticObj(GameObject* pObj);
 
@@ -34,6 +37,8 @@ public:
     void AddClone();
 
     void CommandRunner(std::unique_ptr<GameCommand> command);
+
+    void EndTitle();
 
 public:
     std::shared_ptr<AbstractLevelGUI> levelGUI;
@@ -487,19 +492,29 @@ void SBomber::DrawFrame()
     gScreen->Flush();
 }
 
-void SBomber::TimeStart()
+void SBomber::SBomberImpl::TimeStart()
 {
     LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
-    pImpl->startTime = GetTickCount64();
+    startTime = GetTickCount64();
+}
+
+void SBomber::TimeStart()
+{
+    pImpl->TimeStart();
+}
+
+void SBomber::SBomberImpl::TimeFinish()
+{
+    finishTime = GetTickCount64();
+    deltaTime = uint16_t(finishTime - startTime);
+    passedTime += deltaTime;
+
+    LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)deltaTime);
 }
 
 void SBomber::TimeFinish()
 {
-    pImpl->finishTime = GetTickCount64();
-    pImpl->deltaTime = uint16_t(pImpl->finishTime - pImpl->startTime);
-    pImpl->passedTime += pImpl->deltaTime;
-
-    LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)pImpl->deltaTime);
+    pImpl->TimeFinish();
 }
 
 void SBomber::SBomberImpl::DropBigBomb()
@@ -525,5 +540,71 @@ void SBomber::SBomberImpl::CommandRunner(std::unique_ptr<GameCommand> command)
     if(command) {
         command->Run();
     }
+}
+
+void SBomber::SBomberImpl::EndTitle()
+{
+    static const size_t scrollHeight = 30;
+    static const size_t scrollWidth = 30;
+    static const char* ppScroll[scrollHeight] =
+            { "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "  Project manager:        	",
+              " 	 Ivan Vasilevich      	",
+              "                          	",
+              "  Developers:             	",
+              " 	 Nikolay Gavrilov     	",
+              " 	 Dmitriy Sidelnikov   	",
+              " 	 Eva Brown            	",
+              "                          	",
+              "  Designers:              	",
+              " 	 Anna Pachenkova      	",
+              " 	 Elena Shvaiber       	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	"
+            };
+
+    const size_t windowHeight = 10;
+    const size_t startX = gScreen->GetMaxX() / 2 - scrollWidth / 2;
+    const size_t startY = gScreen->GetMaxY() / 2 - windowHeight / 2;
+    double curPos = 0;
+    int count_time = 0;
+    int count_string = 0;
+    do {
+        TimeStart();
+        gScreen->ClrScr();
+        gScreen->GotoXY(0, 0);
+
+        count_time = (int)curPos;
+        for (count_string = count_time; count_string < (count_time + windowHeight); count_string++) {
+            gScreen->GotoXY(startX, startY + count_string - count_time);
+            gScreen->Draw(ppScroll[count_string]);
+        }
+
+        TimeFinish();
+        curPos += deltaTime * 0.0015;
+
+    } while (!_kbhit() && int(curPos) <= (scrollHeight - windowHeight));
+    gScreen->ClrScr();
+}
+
+void SBomber::EndTitle()
+{
+    pImpl->EndTitle();
 }
 

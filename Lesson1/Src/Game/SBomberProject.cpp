@@ -38,5 +38,7 @@ int main(void)
 
     } while(!game.GetExitFlag());
 
+    game.EndTitle();
+
     return 0;
 }
