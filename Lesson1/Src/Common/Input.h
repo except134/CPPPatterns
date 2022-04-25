@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _WIN32
+
 class InputHandler
 {
 public:
@@ -11,3 +13,5 @@ public:
 private:
     HANDLE mInputHandle{};
 };
+
+#endif

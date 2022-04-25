@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include "LessonPCH.h"
 
+#ifdef _WIN32
+
 InputHandler::InputHandler()
 {
     mInputHandle = GetStdHandle(STD_INPUT_HANDLE);
@@ -37,3 +39,5 @@ uint32_t InputHandler::GetInput(INPUT_RECORD* eventBuffer)
 
     return numEventsRead;
 }
+
+#endif

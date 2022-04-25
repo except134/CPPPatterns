@@ -85,6 +85,7 @@
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <termios.h>
 
 #endif
 

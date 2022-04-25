@@ -22,8 +22,12 @@ void LoggerProxy::CloseLogFile()
 const std::tm* LoggerProxy::GetLocalTime()
 {
     auto in_time_t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+#ifdef _WIN32
     localtime_s(&localTime, &in_time_t);
     return &localTime;
+#else
+	return localtime(&in_time_t);
+#endif
 }
 
 std::ostream& operator<< (std::ostream& stream, const std::tm* tm)

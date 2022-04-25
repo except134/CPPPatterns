@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _WIN32
+
 class ScreenConsolePlain : public IScreen, public SingletonStatic<ScreenConsolePlain>, public NonCopyable, public NonMoveable
 {
 public:
@@ -13,3 +15,4 @@ public:
     void Draw(uint16_t x, uint16_t y, char str) override;
 };
 
+#endif

@@ -22,6 +22,7 @@ solution ("Lesson1")
 	}
 
         includedirs { 
+			"Src"
 	}
 
         libdirs { 

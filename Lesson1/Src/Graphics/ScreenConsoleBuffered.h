@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _WIN32
+
 class ScreenConsoleBuffered : public IScreen, public SingletonStatic<ScreenConsoleBuffered>, public NonCopyable, public NonMoveable
 {
 public:
@@ -25,3 +27,4 @@ protected:
     HANDLE mOutputHandle{};
 };
 
+#endif

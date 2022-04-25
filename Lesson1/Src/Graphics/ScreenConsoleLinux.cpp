@@ -38,4 +38,17 @@ void ScreenConsoleLinux::Draw(const std::string& str)
     std::cout << str;
 }
 
+void ScreenConsoleLinux::Draw(uint16_t x, uint16_t y, const std::string& str)
+{
+    GotoXY(x, y);
+    Draw(str);
+}
+
+void ScreenConsoleLinux::Draw(uint16_t x, uint16_t y, char str)
+{
+    GotoXY(x, y);
+    std::string s(1, str);
+    Draw(s);
+}
+
 #endif
