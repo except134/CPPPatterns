@@ -30,4 +30,5 @@
 *.out
 *.app
 
+.idea
 Build
