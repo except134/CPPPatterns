@@ -3,6 +3,8 @@
 class TankAdapter : public DestroyableGroundObject
 {
 public:
+    TankAdapter() = default;
+
     void SetPos(double nx, double ny) override
     {
         tank.SetPos(nx, ny);
@@ -43,7 +45,19 @@ public:
         return tank.GetScore();
     }
 
+    TankAdapter* Clone() const override
+    {
+        return new TankAdapter(*this);
+    }
+
 private:
+    TankAdapter(const TankAdapter& rhs)
+    {
+        x = rhs.x;
+        y = rhs.y;
+        width = rhs.width;
+    }
+
     TankAdaptee tank;
 };
 

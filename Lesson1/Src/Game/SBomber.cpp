@@ -9,7 +9,10 @@ class SBomber::SBomberImpl
 public:
     SBomberImpl();
     ~SBomberImpl() = default;
-        
+
+    void TimeStart();
+    void TimeFinish();
+
     void DeleteDynamicObj(DynamicObject* pBomb);
     void DeleteStaticObj(GameObject* pObj);
 
@@ -31,8 +34,11 @@ public:
 
     void DropBigBomb();
     void DropSmallBomb();
+    void AddClone();
 
     void CommandRunner(std::unique_ptr<GameCommand> command);
+
+    void EndTitle();
 
 public:
     std::shared_ptr<AbstractLevelGUI> levelGUI;
@@ -111,14 +117,19 @@ SBomber::SBomberImpl::SBomberImpl()
 
     uint16_t tankWidth = 13;
     uint16_t tankSpace = 10;
-    uint16_t tankStartX = ((width - 2) - (tankWidth + tankSpace) * 3) / 2;
+    uint16_t tankStartX = ((width - 2) - (tankWidth + tankSpace) * 4) / 2;
 
     mediator = std::make_shared<Mediator>();
     mediator->Add(levelGUI);
 
+    std::shared_ptr<Tree> pTree = std::make_shared<Tree>(std::make_unique<SmallState>());
+    pTree->SetWidth(tankWidth);
+    pTree->SetPos(tankStartX, groundY - 1);
+    vecDynamicObj.emplace_back(pTree);
+
     std::shared_ptr<TankAdapter> pTankAdaptee = std::make_shared<TankAdapter>();
     pTankAdaptee->SetWidth(tankWidth);
-    pTankAdaptee->SetPos(tankStartX, groundY - 1);
+    pTankAdaptee->SetPos(pTree->GetX() + tankWidth + tankSpace, groundY - 1);
     vecStaticObj.emplace_back(pTankAdaptee);
 
     std::shared_ptr<Tank> pTank1 = std::make_shared<Tank>(mediator);
@@ -163,6 +174,48 @@ SBomber::SBomberImpl::SBomberImpl()
     pHouse->SetPos(pTank2->GetX() + tankWidth + tankSpace, groundY);
     vecStaticObj.emplace_back(pHouse);
 
+}
+
+void SBomber::SBomberImpl::AddClone()
+{
+    auto allObjects = std::move(FindDestoyableGroundObjects());
+
+    if(allObjects.empty()) {
+        std::shared_ptr<TankAdapter> pTankAdaptee = std::make_shared<TankAdapter>();
+        pTankAdaptee->SetWidth(13);
+        pTankAdaptee->SetPos(30, gScreen->GetMaxY() - 6);
+        vecStaticObj.emplace_back(pTankAdaptee);
+        return;
+    }
+
+    std::random_device rd;
+    std::mt19937 rdnum(rd());
+
+    auto cloned = allObjects.at(rdnum() % allObjects.size())->Clone();
+
+    const double size = cloned->GetWidth();
+    const double sizeByTwo = size / 2;
+    double posX{ sizeByTwo };
+
+    for ( ; posX < (gScreen->GetMaxX() - sizeByTwo); ++posX) {
+        bool isBusy = false;
+        for (size_t i = 0; i < allObjects.size(); i++) {
+            if (allObjects[i]->IsInside(posX, posX + size)) {
+                isBusy = true;
+                continue;
+            }
+        }
+
+        if (!isBusy)
+            break;
+    }
+
+    if (posX < (gScreen->GetMaxX() - size)) {
+        cloned->SetPos(posX, cloned->GetY());
+        vecStaticObj.emplace_back(cloned);
+    } else {
+        delete cloned;
+    }
 }
 
 SBomber::SBomber()
@@ -383,6 +436,11 @@ void SBomber::ProcessKBHit()
             }
         }break;
 
+        case 'd':
+        case 'D':
+            pImpl->AddClone();
+        break;
+
         case 'b':
         case 'B':
             pImpl->DropBigBomb();
@@ -434,19 +492,29 @@ void SBomber::DrawFrame()
     gScreen->Flush();
 }
 
-void SBomber::TimeStart()
+void SBomber::SBomberImpl::TimeStart()
 {
     LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " was invoked");
-    pImpl->startTime = GetTickCount64();
+    startTime = GetTickCount64();
+}
+
+void SBomber::TimeStart()
+{
+    pImpl->TimeStart();
+}
+
+void SBomber::SBomberImpl::TimeFinish()
+{
+    finishTime = GetTickCount64();
+    deltaTime = uint16_t(finishTime - startTime);
+    passedTime += deltaTime;
+
+    LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)deltaTime);
 }
 
 void SBomber::TimeFinish()
 {
-    pImpl->finishTime = GetTickCount64();
-    pImpl->deltaTime = uint16_t(pImpl->finishTime - pImpl->startTime);
-    pImpl->passedTime += pImpl->deltaTime;
-
-    LoggerProxy::Instance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)pImpl->deltaTime);
+    pImpl->TimeFinish();
 }
 
 void SBomber::SBomberImpl::DropBigBomb()
@@ -472,5 +540,71 @@ void SBomber::SBomberImpl::CommandRunner(std::unique_ptr<GameCommand> command)
     if(command) {
         command->Run();
     }
+}
+
+void SBomber::SBomberImpl::EndTitle()
+{
+    static const size_t scrollHeight = 30;
+    static const size_t scrollWidth = 30;
+    static const char* ppScroll[scrollHeight] =
+            { "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "  Project manager:        	",
+              " 	 Ivan Vasilevich      	",
+              "                          	",
+              "  Developers:             	",
+              " 	 Nikolay Gavrilov     	",
+              " 	 Dmitriy Sidelnikov   	",
+              " 	 Eva Brown            	",
+              "                          	",
+              "  Designers:              	",
+              " 	 Anna Pachenkova      	",
+              " 	 Elena Shvaiber       	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	",
+              "                          	"
+            };
+
+    const size_t windowHeight = 10;
+    const size_t startX = gScreen->GetMaxX() / 2 - scrollWidth / 2;
+    const size_t startY = gScreen->GetMaxY() / 2 - windowHeight / 2;
+    double curPos = 0;
+    int count_time = 0;
+    int count_string = 0;
+    do {
+        TimeStart();
+        gScreen->ClrScr();
+        gScreen->GotoXY(0, 0);
+
+        count_time = (int)curPos;
+        for (count_string = count_time; count_string < (count_time + windowHeight); count_string++) {
+            gScreen->GotoXY(startX, startY + count_string - count_time);
+            gScreen->Draw(ppScroll[count_string]);
+        }
+
+        TimeFinish();
+        curPos += deltaTime * 0.0015;
+
+    } while (!_kbhit() && int(curPos) <= (scrollHeight - windowHeight));
+    gScreen->ClrScr();
+}
+
+void SBomber::EndTitle()
+{
+    pImpl->EndTitle();
 }
 

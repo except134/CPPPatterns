@@ -57,8 +57,9 @@ public:
     }
 
 protected:
-    double speed;
-    double xDirection, yDirection;
-    DestroyableObjectsVector observers;
+    double speed{};
+    double xDirection{};
+    double yDirection{};
+    DestroyableObjectsVector observers{};
 };
 
